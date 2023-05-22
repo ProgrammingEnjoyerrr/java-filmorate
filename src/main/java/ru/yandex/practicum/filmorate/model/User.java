@@ -1,6 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDate;
 
@@ -11,9 +16,17 @@ import java.time.LocalDate;
 public class User {
     @Setter
     private Integer id;
+
+    @NotBlank
+    @NotEmpty
     private final String login;
-    private final String name;
+
+    @Setter
+    private String name;
+
+    @Email
     private final String email;
+
     private final LocalDate birthday;
 
 }
