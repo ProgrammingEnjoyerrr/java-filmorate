@@ -27,7 +27,8 @@ public class UserController {
 
     @PutMapping
     public User update(@RequestBody User user) {
-        return idToUser.put(id, user);
+        idToUser.put(id, user);
+        return user;
     }
 
     @GetMapping
