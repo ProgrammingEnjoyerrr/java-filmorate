@@ -17,7 +17,9 @@ class UserControllerTests {
 
     private static UserController userController;
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private static final int ANY_ID = 0;
 
     @BeforeAll
     private static void init() {
@@ -27,8 +29,8 @@ class UserControllerTests {
     @Test
     @Order(1)
     void testCreateUserShouldBeOk() {
-        final User user = new User("dolore", "Nick Name", "mail@mail.ru",
-                LocalDate.parse("1946-08-20", formatter));
+        final User user = new User(ANY_ID, "dolore", "Nick Name", "mail@mail.ru",
+                LocalDate.parse("1946-08-20", FORMATTER));
 
         final User created = userController.create(user);
 
@@ -43,7 +45,7 @@ class UserControllerTests {
     @Order(2)
     void testUpdateUserShouldBeOk() {
         final User user = new User(1, "doloreUpdate", "est adipisicing", "mail@yandex.ru",
-                LocalDate.parse("1976-09-20", formatter));
+                LocalDate.parse("1976-09-20", FORMATTER));
 
         final User updated = userController.update(user);
 
@@ -58,7 +60,7 @@ class UserControllerTests {
     @Order(3)
     void testUpdateUnknownUserShouldThrow() {
         final User user = new User(9999, "doloreUpdate", "est adipisicing", "mail@yandex.ru",
-                LocalDate.parse("1976-09-20", formatter));
+                LocalDate.parse("1976-09-20", FORMATTER));
 
         final UserValidationException exception = assertThrows(UserValidationException.class,
                 () -> userController.update(user));
@@ -82,8 +84,8 @@ class UserControllerTests {
     @Test
     @Order(5)
     void testCreateUserWithEmptyNameShouldBeOk() {
-        final User user = new User("common", "", "friend@common.ru",
-                LocalDate.parse("2000-08-20", formatter));
+        final User user = new User(ANY_ID, "common", "", "friend@common.ru",
+                LocalDate.parse("2000-08-20", FORMATTER));
 
         final User created = userController.create(user);
 

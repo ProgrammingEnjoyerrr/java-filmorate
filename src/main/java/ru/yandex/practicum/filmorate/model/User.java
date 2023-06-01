@@ -28,11 +28,4 @@ public class User {
 
     @NotInFuture
     private final LocalDate birthday;
-
-    public User(String login, String name, String email, LocalDate birthday) {
-        this.login = login;
-        this.name = name;
-        this.email = email;
-        this.birthday = birthday;
-    }
 }

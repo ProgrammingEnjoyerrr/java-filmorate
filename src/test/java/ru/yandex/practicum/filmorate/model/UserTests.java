@@ -15,9 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserTests {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private static Validator validator;
+
+    private static final int ANY_ID = 0;
 
     @BeforeAll
     private static void init() {
@@ -27,8 +29,8 @@ class UserTests {
 
     @Test
     void testCreateUserWithFailLoginShouldThrow() {
-        final User user = new User("dolore ullamco", "some name", "yandex@mail.ru",
-                LocalDate.parse("1946-08-20", formatter));
+        final User user = new User(ANY_ID, "dolore ullamco", "some name", "yandex@mail.ru",
+                LocalDate.parse("1946-08-20", FORMATTER));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
@@ -37,8 +39,8 @@ class UserTests {
 
     @Test
     void testCreateUserWithFailEmailShouldThrow() {
-        final User user = new User("valid_login", "", "mail.ru",
-                LocalDate.parse("1980-08-20", formatter));
+        final User user = new User(ANY_ID, "valid_login", "", "mail.ru",
+                LocalDate.parse("1980-08-20", FORMATTER));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
@@ -47,8 +49,8 @@ class UserTests {
 
     @Test
     void testCreateUserWithFailBirthdayShouldThrow() {
-        final User user = new User("valid_login", "", "test@mail.ru",
-                LocalDate.parse("2446-08-20", formatter));
+        final User user = new User(ANY_ID, "valid_login", "", "test@mail.ru",
+                LocalDate.parse("2446-08-20", FORMATTER));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
