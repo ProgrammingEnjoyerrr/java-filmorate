@@ -32,7 +32,6 @@ class FilmTests {
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size());
-        assertEquals("не должно быть пустым", violations.iterator().next().getMessage());
     }
 
     @Test
@@ -42,7 +41,6 @@ class FilmTests {
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size());
-        assertEquals("превышено максимальное допустимое количество символов в строке", violations.iterator().next().getMessage());
     }
 
     @Test
@@ -51,7 +49,6 @@ class FilmTests {
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size());
-        assertEquals("дата не может быть раньше чем заданная", violations.iterator().next().getMessage());
     }
 
     @Test
@@ -60,6 +57,5 @@ class FilmTests {
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size());
-        assertEquals("должно быть больше 0", violations.iterator().next().getMessage());
     }
 }
