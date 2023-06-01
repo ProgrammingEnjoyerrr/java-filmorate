@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.NoSpaces;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.NotInFuture;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @AllArgsConstructor

@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.utils.validation.impl;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.NoSpaces;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 public class NoSpacesValidator implements ConstraintValidator<NoSpaces, CharSequence> {
 

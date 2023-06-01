@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.AfterDate;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.MaxByteLength;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @AllArgsConstructor
