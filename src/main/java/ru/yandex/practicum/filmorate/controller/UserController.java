@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.UserControllerValidationException;
+import ru.yandex.practicum.filmorate.exception.UserValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class UserController {
     @ResponseBody
     public User create(@Valid @RequestBody User user) {
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new UserControllerValidationException("Дата рождения не может быть в будущем. " +
+            throw new UserValidationException("Дата рождения не может быть в будущем. " +
                     "Переданное значение: " + user.getBirthday());
         }
 
@@ -40,7 +40,7 @@ public class UserController {
     @PutMapping
     public User update(@RequestBody User user) {
         if (!idToUser.containsKey(user.getId())) {
-            throw new UserControllerValidationException("Попытка обновить пользователя " +
+            throw new UserValidationException("Попытка обновить пользователя " +
                     "с несуществующим id " + user.getId());
         }
 
