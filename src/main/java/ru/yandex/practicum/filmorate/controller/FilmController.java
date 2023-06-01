@@ -26,7 +26,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
         if (!idToFilm.containsKey(film.getId())) {
             throw new FilmValidationException("Попытка обновить фильм " +
                     "с несуществующим id " + film.getId());

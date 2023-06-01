@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
         if (!idToUser.containsKey(user.getId())) {
             throw new UserValidationException("Попытка обновить пользователя " +
                     "с несуществующим id " + user.getId());
