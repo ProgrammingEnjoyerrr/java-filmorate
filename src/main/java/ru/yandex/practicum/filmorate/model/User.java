@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.model;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import ru.yandex.practicum.filmorate.utils.NoSpaces;
-import ru.yandex.practicum.filmorate.utils.NotInFuture;
+import ru.yandex.practicum.filmorate.utils.validation.constraints.NoSpaces;
+import ru.yandex.practicum.filmorate.utils.validation.constraints.NotInFuture;
 
 import java.time.LocalDate;
 
