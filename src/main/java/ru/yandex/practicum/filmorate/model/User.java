@@ -1,9 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import ru.yandex.practicum.filmorate.utils.NoSpaces;
+import ru.yandex.practicum.filmorate.utils.NotInFuture;
 
 import java.time.LocalDate;
 
@@ -15,8 +16,8 @@ public class User {
     @Setter
     private Integer id;
 
-    @NotBlank
     @NotEmpty
+    @NoSpaces
     private final String login;
 
     @Setter
@@ -25,6 +26,13 @@ public class User {
     @Email
     private final String email;
 
+    @NotInFuture
     private final LocalDate birthday;
 
+    public User(String login, String name, String email, LocalDate birthday) {
+        this.login = login;
+        this.name = name;
+        this.email = email;
+        this.birthday = birthday;
+    }
 }
