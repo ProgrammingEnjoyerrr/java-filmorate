@@ -1,30 +1,32 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import ru.yandex.practicum.filmorate.exception.UserValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@WebMvcTest
 class UserControllerTests {
 
-    private static UserController userController;
+    @Autowired
+    private UserController userController;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private static final int ANY_ID = 0;
-
-    @BeforeAll
-    private static void init() {
-        userController = new UserController();
-    }
 
     @Test
     @Order(1)
@@ -95,5 +97,59 @@ class UserControllerTests {
         assertEquals("common", created.getName());
         assertEquals(created.getEmail(), user.getEmail());
         assertEquals(created.getBirthday(), user.getBirthday());
+    }
+
+    @Test
+    @Order(6)
+    void createUserWithFailLoginShouldThrow() {
+        final User user = new User(ANY_ID, "dolore ullamco", "some name", "yandex@mail.ru",
+                LocalDate.parse("1946-08-20", FORMATTER));
+
+        assertThrows(ConstraintViolationException.class, () -> userController.create(user));
+    }
+
+    @Test
+    @Order(7)
+    void createUserWithFailEmailShouldThrow() {
+        final User user = new User(ANY_ID, "valid_login", "", "mail.ru",
+                LocalDate.parse("1980-08-20", FORMATTER));
+
+        assertThrows(ConstraintViolationException.class, () -> userController.create(user));
+    }
+
+    @Test
+    @Order(8)
+    void createUserWithFailBirthdayShouldThrow() {
+        final User user = new User(ANY_ID, "valid_login", "", "test@mail.ru",
+                LocalDate.parse("2446-08-20", FORMATTER));
+
+        assertThrows(ConstraintViolationException.class, () -> userController.create(user));
+    }
+
+    @Test
+    @Order(9)
+    void updateUserWithFailLoginShouldThrow() {
+        final User user = new User(1, "dolore ullamco", "some name", "yandex@mail.ru",
+                LocalDate.parse("1946-08-20", FORMATTER));
+
+        assertThrows(ConstraintViolationException.class, () -> userController.update(user));
+    }
+
+    @Test
+    @Order(10)
+    void updateUserWithFailEmailShouldThrow() {
+        final User user = new User(1, "valid_login", "", "mail.ru",
+                LocalDate.parse("1980-08-20", FORMATTER));
+
+        assertThrows(ConstraintViolationException.class, () -> userController.update(user));
+    }
+
+    @Test
+    @Order(11)
+    void updateUserWithFailBirthdayShouldThrow() {
+        final User user = new User(1, "valid_login", "", "test@mail.ru",
+                LocalDate.parse("2446-08-20", FORMATTER));
+
+        assertThrows(ConstraintViolationException.class, () -> userController.update(user));
     }
 }
