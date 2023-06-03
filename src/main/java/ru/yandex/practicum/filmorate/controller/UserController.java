@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exception.UserValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,6 @@ public class UserController {
 
     @GetMapping
     public Collection<User> getAllUsers() {
-        return idToUser.values();
+        return new ArrayList<>(idToUser.values());
     }
 }

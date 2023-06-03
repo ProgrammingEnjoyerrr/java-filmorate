@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.exception.FilmValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,6 @@ public class FilmController {
 
     @GetMapping
     public Collection<Film> getAllFilms() {
-        return idToFilm.values();
+        return new ArrayList<>(idToFilm.values());
     }
 }
