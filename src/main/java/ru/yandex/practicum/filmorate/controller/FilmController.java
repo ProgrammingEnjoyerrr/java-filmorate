@@ -16,7 +16,6 @@ public class FilmController {
     private int id = 0;
 
     @PostMapping
-    @ResponseBody
     public Film create(@Valid @RequestBody Film film) {
         ++id;
         film.setId(id);

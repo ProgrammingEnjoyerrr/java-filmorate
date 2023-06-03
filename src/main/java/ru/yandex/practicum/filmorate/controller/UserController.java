@@ -18,7 +18,6 @@ public class UserController {
     private int id = 0;
 
     @PostMapping
-    @ResponseBody
     public User create(@Valid @RequestBody User user) {
         ++id;
         if (user.getName() == null || user.getName().isEmpty()) {
