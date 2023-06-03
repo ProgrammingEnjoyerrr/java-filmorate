@@ -27,7 +27,7 @@ class FilmTests {
     }
 
     @Test
-    void testCreateFilmWithFailNameShouldFailValidation() {
+    void createFilmWithFailNameShouldFailValidation() {
         final Film film = new Film(ANY_ID, "", "Description", LocalDate.parse("1900-03-25", FORMATTER), 200);
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -35,7 +35,7 @@ class FilmTests {
     }
 
     @Test
-    void testCreateFilmWithFailDescriptionShouldFailValidation() {
+    void createFilmWithFailDescriptionShouldFailValidation() {
         final Film film = new Film(ANY_ID, "Film name", "Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль. Здесь они хотят разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов. о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.",
                 LocalDate.parse("1900-03-25", FORMATTER), 200);
 
@@ -44,7 +44,7 @@ class FilmTests {
     }
 
     @Test
-    void testCreateFilmWithFailReleaseDateShouldFailValidation() {
+    void createFilmWithFailReleaseDateShouldFailValidation() {
         final Film film = new Film(ANY_ID, "Name", "Description", LocalDate.parse("1890-03-25", FORMATTER), 200);
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -52,7 +52,7 @@ class FilmTests {
     }
 
     @Test
-    void testCreateFilmWithFailDurationShouldFailValidation() {
+    void createFilmWithFailDurationShouldFailValidation() {
         final Film film = new Film(ANY_ID, "Name", "Description", LocalDate.parse("1980-03-25", FORMATTER), -200);
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);

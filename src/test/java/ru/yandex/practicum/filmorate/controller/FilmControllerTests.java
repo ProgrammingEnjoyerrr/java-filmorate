@@ -28,7 +28,7 @@ class FilmControllerTests {
 
     @Test
     @Order(1)
-    void testCreateFilmShouldBeOk() {
+    void createFilmShouldBeOk() {
         final Film film = new Film(ANY_ID, "nisi eiusmod", "adipisicing", LocalDate.parse("1967-03-25", FORMATTER), 100);
 
         final Film created = filmController.create(film);
@@ -42,7 +42,7 @@ class FilmControllerTests {
 
     @Test
     @Order(2)
-    void testUpdateFilmShouldBeOk() {
+    void updateFilmShouldBeOk() {
         final Film film = new Film(1, "Film Updated", "New film update description", LocalDate.parse("1989-04-17", FORMATTER), 190);
 
         final Film updated = filmController.update(film);
@@ -56,7 +56,7 @@ class FilmControllerTests {
 
     @Test
     @Order(3)
-    void testUpdateUnknownFilmShouldThrow() {
+    void updateUnknownFilmShouldThrow() {
         final Film film = new Film(9999, "Film Updated", "New film update description", LocalDate.parse("1989-04-17", FORMATTER), 190);
 
         final FilmValidationException exception = assertThrows(FilmValidationException.class,
@@ -66,7 +66,7 @@ class FilmControllerTests {
 
     @Test
     @Order(4)
-    void testGetAllFilmsShouldBeOk() {
+    void getAllFilmsShouldBeOk() {
         final Collection<Film> users = filmController.getAllFilms();
         assertEquals(1, users.size());
 

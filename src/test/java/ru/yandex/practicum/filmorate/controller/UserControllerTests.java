@@ -28,7 +28,7 @@ class UserControllerTests {
 
     @Test
     @Order(1)
-    void testCreateUserShouldBeOk() {
+    void createUserShouldBeOk() {
         final User user = new User(ANY_ID, "dolore", "Nick Name", "mail@mail.ru",
                 LocalDate.parse("1946-08-20", FORMATTER));
 
@@ -43,7 +43,7 @@ class UserControllerTests {
 
     @Test
     @Order(2)
-    void testUpdateUserShouldBeOk() {
+    void updateUserShouldBeOk() {
         final User user = new User(1, "doloreUpdate", "est adipisicing", "mail@yandex.ru",
                 LocalDate.parse("1976-09-20", FORMATTER));
 
@@ -58,7 +58,7 @@ class UserControllerTests {
 
     @Test
     @Order(3)
-    void testUpdateUnknownUserShouldThrow() {
+    void updateUnknownUserShouldThrow() {
         final User user = new User(9999, "doloreUpdate", "est adipisicing", "mail@yandex.ru",
                 LocalDate.parse("1976-09-20", FORMATTER));
 
@@ -69,7 +69,7 @@ class UserControllerTests {
 
     @Test
     @Order(4)
-    void testGetAllUsersShouldBeOk() {
+    void getAllUsersShouldBeOk() {
         final Collection<User> users = userController.getAllUsers();
         assertEquals(1, users.size());
 
@@ -83,7 +83,7 @@ class UserControllerTests {
 
     @Test
     @Order(5)
-    void testCreateUserWithEmptyNameShouldBeOk() {
+    void createUserWithEmptyNameShouldBeOk() {
         final User user = new User(ANY_ID, "common", "", "friend@common.ru",
                 LocalDate.parse("2000-08-20", FORMATTER));
 

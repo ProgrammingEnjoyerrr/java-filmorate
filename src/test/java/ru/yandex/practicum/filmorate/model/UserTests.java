@@ -28,7 +28,7 @@ class UserTests {
     }
 
     @Test
-    void testCreateUserWithFailLoginShouldFailValidation() {
+    void createUserWithFailLoginShouldFailValidation() {
         final User user = new User(ANY_ID, "dolore ullamco", "some name", "yandex@mail.ru",
                 LocalDate.parse("1946-08-20", FORMATTER));
 
@@ -37,7 +37,7 @@ class UserTests {
     }
 
     @Test
-    void testCreateUserWithFailEmailShouldFailValidation() {
+    void createUserWithFailEmailShouldFailValidation() {
         final User user = new User(ANY_ID, "valid_login", "", "mail.ru",
                 LocalDate.parse("1980-08-20", FORMATTER));
 
@@ -46,7 +46,7 @@ class UserTests {
     }
 
     @Test
-    void testCreateUserWithFailBirthdayShouldFailValidation() {
+    void createUserWithFailBirthdayShouldFailValidation() {
         final User user = new User(ANY_ID, "valid_login", "", "test@mail.ru",
                 LocalDate.parse("2446-08-20", FORMATTER));
 
