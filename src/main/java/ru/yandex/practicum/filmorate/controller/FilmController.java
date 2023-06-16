@@ -1,36 +1,33 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    private final Map<Integer, Film> idToFilm = new HashMap<>();
-    private int id = 0;
+
+    private final FilmService service;
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         log.debug("got request POST /films");
         log.debug("request body: {}", film);
 
-        ++id;
-        film.setId(id);
-        idToFilm.put(id, film);
+        Film created = service.createFilm(film);
 
         log.debug("film created");
-        return film;
+        return created;
     }
 
     @PutMapping
@@ -38,19 +35,14 @@ public class FilmController {
         log.debug("got request PUT /films");
         log.debug("request body: {}", film);
 
-        if (!idToFilm.containsKey(film.getId())) {
-            log.error("attempt to update film with unknown id: {}", film.getId());
-            throw new FilmValidationException("Попытка обновить фильм " +
-                    "с несуществующим id " + film.getId());
-        }
+        Film updated = service.updateFilm(film);
 
-        idToFilm.put(id, film);
         log.debug("film updated");
-        return film;
+        return updated;
     }
 
     @GetMapping
     public Collection<Film> getAllFilms() {
-        return new ArrayList<>(idToFilm.values());
+        return service.getFilms();
     }
 }
