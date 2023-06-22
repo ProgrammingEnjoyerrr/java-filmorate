@@ -9,7 +9,13 @@ public interface FilmStorage {
 
     Film updateFilm(Film film);
 
-    Film getFilm(int id);
-
     Collection<Film> getFilms();
+
+    Film getFilmById(int userId);
+
+    void addUserLike(int filmId, int userId);
+
+    void deleteUserLike(int filmId, int userId);
+
+    Collection<Film> getPopularFilms(int count);
 }

@@ -45,4 +45,35 @@ public class FilmController {
     public Collection<Film> getAllFilms() {
         return service.getFilms();
     }
+
+    @GetMapping(value = "/{id}")
+    public Film getFilmById(@PathVariable("id") String filmIdStr) {
+        int filmId = Integer.parseInt(filmIdStr);
+
+        return service.getFilmById(filmId);
+    }
+
+
+    @PutMapping(value = "/{id}/like/{userId}")
+    public void addUserLike(@PathVariable("id") String filmIdStr,
+                            @PathVariable("userId") String userIdStr) {
+        int filmId = Integer.parseInt(filmIdStr);
+        int userId = Integer.parseInt(userIdStr);
+
+        service.addUserLike(filmId, userId);
+    }
+
+    @DeleteMapping(value = "/{id}/like/{userId}")
+    public void deleteUserLike(@PathVariable("id") String filmIdStr,
+                               @PathVariable("userId") String userIdStr) {
+        int filmId = Integer.parseInt(filmIdStr);
+        int userId = Integer.parseInt(userIdStr);
+
+        service.deleteUserLike(filmId, userId);
+    }
+
+    @GetMapping(value = "/popular")
+    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count) {
+        return service.getPopularFilms(count);
+    }
 }
