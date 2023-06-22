@@ -25,12 +25,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(int id) {
-        return null;
+    public User getUserById(int id) {
+        return storage.getUserById(id);
     }
 
     @Override
     public Collection<User> getUsers() {
         return storage.getUsers();
+    }
+
+    @Override
+    public void addFriend(int userId, int friendId) {
+        storage.addFriend(userId, friendId);
     }
 }

@@ -9,7 +9,9 @@ public interface UserStorage {
 
     User updateUser(User user);
 
-    User getUser(int id);
+    User getUserById(int userId);
 
     Collection<User> getUsers();
+
+    void addFriend(int userId, int friendId);
 }

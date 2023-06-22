@@ -9,7 +9,9 @@ public interface UserService {
 
     User updateUser(User user);
 
-    User getUser(int id);
+    User getUserById(int id);
 
     Collection<User> getUsers();
+
+    void addFriend(int userId, int friendId);
 }

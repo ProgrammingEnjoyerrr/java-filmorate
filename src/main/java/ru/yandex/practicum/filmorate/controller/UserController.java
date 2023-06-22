@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -44,5 +45,23 @@ public class UserController {
     @GetMapping
     public Collection<User> getAllUsers() {
         return service.getUsers();
+    }
+
+    @GetMapping(value = "/{id}")
+    public User getUserById(@PathVariable("id") String userIdStr) {
+        int userId = Integer.parseInt(userIdStr);
+
+        return service.getUserById(userId);
+    }
+
+    @PutMapping(value = "/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable("id") String userIdStr,
+                          @PathVariable("friendId") String friendIdStr) {
+        int userId = Integer.parseInt(userIdStr);
+        int friendId = Integer.parseInt(friendIdStr);
+
+        service.addFriend(userId, friendId);
+
+        return null;
     }
 }
