@@ -8,9 +8,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -76,15 +74,22 @@ public class UserController {
     @GetMapping(value = "/{id}/friends")
     public Collection<User> getUserFriends(@PathVariable("id") String userIdStr) {
         int userId = Integer.parseInt(userIdStr);
+        return service.getUserFriends(userId);
+    }
 
-        User user = service.getUserById(userId);
-        Set<Long> friendIds = user.getFriends();
+    @GetMapping(value = "/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@PathVariable("id") String userIdStr,
+                                             @PathVariable("otherId") String otherUserIdStr) {
+        int userId = Integer.parseInt(userIdStr);
+        int otherUserId = Integer.parseInt(otherUserIdStr);
 
-        Collection<User> userFriends = new ArrayList<>();
-        for (Long friendId : friendIds) {
-            userFriends.add(service.getUserById(Math.toIntExact(friendId)));
-        }
+        Set<User> commonUsers = new HashSet<>();
 
-        return userFriends;
+        Collection<User> userFriends = service.getUserFriends(userId);
+        commonUsers.addAll(userFriends);
+        Collection<User> otherUserFriends = service.getUserFriends(otherUserId);
+        commonUsers.retainAll(otherUserFriends);
+
+        return new ArrayList<>(commonUsers);
     }
 }

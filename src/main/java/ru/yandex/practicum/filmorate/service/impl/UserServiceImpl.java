@@ -6,7 +6,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +53,18 @@ public class UserServiceImpl implements UserService {
         final User friend = storage.getUserById(friendId);
 
         storage.deleteFriend(userId, friendId);
+    }
+
+    @Override
+    public Collection<User> getUserFriends(int userId) {
+        User user = getUserById(userId);
+        Set<Long> friendIds = user.getFriends();
+
+        Collection<User> userFriends = new ArrayList<>();
+        for (Long friendId : friendIds) {
+            userFriends.add(getUserById(Math.toIntExact(friendId)));
+        }
+
+        return userFriends;
     }
 }
