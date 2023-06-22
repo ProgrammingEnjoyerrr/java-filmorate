@@ -60,7 +60,5 @@ public class InMemoryUserStorage implements UserStorage {
         final User user = idToUser.get(userId);
 
         user.addFriend((long) friendId);
-
-        return;
     }
 }

@@ -55,13 +55,11 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable("id") String userIdStr,
+    public void addFriend(@PathVariable("id") String userIdStr,
                           @PathVariable("friendId") String friendIdStr) {
         int userId = Integer.parseInt(userIdStr);
         int friendId = Integer.parseInt(friendIdStr);
 
         service.addFriend(userId, friendId);
-
-        return null;
     }
 }
