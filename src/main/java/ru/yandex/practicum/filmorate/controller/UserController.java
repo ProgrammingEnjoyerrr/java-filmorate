@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -9,7 +8,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -70,5 +71,20 @@ public class UserController {
         int friendId = Integer.parseInt(friendIdStr);
 
         service.deleteFriend(userId, friendId);
+    }
+
+    @GetMapping(value = "/{id}/friends")
+    public Collection<User> getUserFriends(@PathVariable("id") String userIdStr) {
+        int userId = Integer.parseInt(userIdStr);
+
+        User user = service.getUserById(userId);
+        Set<Long> friendIds = user.getFriends();
+
+        Collection<User> userFriends = new ArrayList<>();
+        for (Long friendId : friendIds) {
+            userFriends.add(service.getUserById(Math.toIntExact(friendId)));
+        }
+
+        return userFriends;
     }
 }

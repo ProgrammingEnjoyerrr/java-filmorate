@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
         final User friend = storage.getUserById(friendId);
 
         storage.addFriend(userId, friendId);
+        storage.addFriend(friendId, userId);
     }
 
     @Override
