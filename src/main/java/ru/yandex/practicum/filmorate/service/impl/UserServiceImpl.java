@@ -36,6 +36,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addFriend(int userId, int friendId) {
+        // Если нет таких пользователей, вылетит исключение
+        final User user = storage.getUserById(userId);
+        final User friend = storage.getUserById(friendId);
+
         storage.addFriend(userId, friendId);
+    }
+
+    @Override
+    public void deleteFriend(int userId, int friendId) {
+        // Если нет таких пользователей, вылетит исключение
+        final User user = storage.getUserById(userId);
+        final User friend = storage.getUserById(friendId);
+
+        storage.deleteFriend(userId, friendId);
     }
 }

@@ -44,4 +44,8 @@ public class User {
     public boolean addFriend(Long friendId) {
         return friends.add(friendId);
     }
+
+    public void deleteFriend(Long friendId) {
+        friends.remove(friendId);
+    }
 }
