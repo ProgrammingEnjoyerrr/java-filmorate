@@ -9,13 +9,13 @@ public interface FilmService {
 
     Film updateFilm(Film film);
 
-    Film getFilmById(int id);
+    Film getFilmById(String filmId);
 
     Collection<Film> getFilms();
 
-    void addUserLike(int filmId, int userId);
+    void addUserLike(String filmId, String userId);
 
-    void deleteUserLike(int filmId, int userId);
+    void deleteUserLike(String filmId, String userId);
 
-    Collection<Film> getPopularFilms(int count);
+    Collection<Film> getPopularFilms(String count);
 }

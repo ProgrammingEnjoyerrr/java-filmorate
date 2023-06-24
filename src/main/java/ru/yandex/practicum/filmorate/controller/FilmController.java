@@ -44,15 +44,15 @@ public class FilmController {
     @GetMapping
     public Collection<Film> getAllFilms() {
         log.debug("got request GET /films");
+
         return filmService.getFilms();
     }
 
     @GetMapping(value = "/{id}")
     public Film getFilmById(@PathVariable("id") String filmIdStr) {
         log.debug("got request GET /films/{}", filmIdStr);
-        int filmId = Integer.parseInt(filmIdStr);
 
-        return filmService.getFilmById(filmId);
+        return filmService.getFilmById(filmIdStr);
     }
 
 
@@ -60,26 +60,23 @@ public class FilmController {
     public void addUserLike(@PathVariable("id") String filmIdStr,
                             @PathVariable("userId") String userIdStr) {
         log.debug("got request PUT /films/{}/like/{}", filmIdStr, userIdStr);
-        int filmId = Integer.parseInt(filmIdStr);
-        int userId = Integer.parseInt(userIdStr);
 
-        filmService.addUserLike(filmId, userId);
+        filmService.addUserLike(filmIdStr, userIdStr);
     }
 
     @DeleteMapping(value = "/{id}/like/{userId}")
     public void deleteUserLike(@PathVariable("id") String filmIdStr,
                                @PathVariable("userId") String userIdStr) {
         log.debug("got request DELETE /films/{}/like/{}", filmIdStr, userIdStr);
-        int filmId = Integer.parseInt(filmIdStr);
-        int userId = Integer.parseInt(userIdStr);
 
-        filmService.deleteUserLike(filmId, userId);
+        filmService.deleteUserLike(filmIdStr, userIdStr);
     }
 
     @GetMapping(value = "/popular")
-    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count) {
+    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") String count) {
         log.debug("got request GET /films/popular");
         log.debug("query params: count={}", count);
+
         return filmService.getPopularFilms(count);
     }
 }
