@@ -43,11 +43,13 @@ public class UserController {
 
     @GetMapping
     public Collection<User> getAllUsers() {
+        log.debug("got request GET /users");
         return service.getUsers();
     }
 
     @GetMapping(value = "/{id}")
     public User getUserById(@PathVariable("id") String userIdStr) {
+        log.debug("got request GET /users/{}", userIdStr);
         int userId = Integer.parseInt(userIdStr);
 
         return service.getUserById(userId);
@@ -56,6 +58,7 @@ public class UserController {
     @PutMapping(value = "/{id}/friends/{friendId}")
     public void addFriend(@PathVariable("id") String userIdStr,
                           @PathVariable("friendId") String friendIdStr) {
+        log.debug("got request PUT /users/{}/friends/{}", userIdStr, friendIdStr);
         int userId = Integer.parseInt(userIdStr);
         int friendId = Integer.parseInt(friendIdStr);
 
@@ -65,6 +68,7 @@ public class UserController {
     @DeleteMapping(value = "/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") String userIdStr,
                              @PathVariable("friendId") String friendIdStr) {
+        log.debug("got request DELETE /users/{}/friends/{}", userIdStr, friendIdStr);
         int userId = Integer.parseInt(userIdStr);
         int friendId = Integer.parseInt(friendIdStr);
 
@@ -73,6 +77,7 @@ public class UserController {
 
     @GetMapping(value = "/{id}/friends")
     public Collection<User> getUserFriends(@PathVariable("id") String userIdStr) {
+        log.debug("got request GET /users/{}/friends", userIdStr);
         int userId = Integer.parseInt(userIdStr);
         return service.getUserFriends(userId);
     }
@@ -80,6 +85,8 @@ public class UserController {
     @GetMapping(value = "/{id}/friends/common/{otherId}")
     public Collection<User> getCommonFriends(@PathVariable("id") String userIdStr,
                                              @PathVariable("otherId") String otherUserIdStr) {
+        log.debug("got request GET /users/{}/friends/common/{}", userIdStr, otherUserIdStr);
+
         int userId = Integer.parseInt(userIdStr);
         int otherUserId = Integer.parseInt(otherUserIdStr);
 

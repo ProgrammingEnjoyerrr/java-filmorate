@@ -73,13 +73,14 @@ public class UserServiceImpl implements UserService {
         for (Long friendId : friendIds) {
             userFriends.add(getUserById(Math.toIntExact(friendId)));
         }
-        log.info("friends of user {} : {}", user, userFriends);
+        log.info("friends of user {} : {}.", user, userFriends);
 
         return userFriends;
     }
 
     private void ensureUserExists(int userId) {
         // Если такого пользователя нет, вылетит исключение
+        log.info("ensuring user with id {} exists.", userId);
         storage.getUserById(userId);
     }
 }
