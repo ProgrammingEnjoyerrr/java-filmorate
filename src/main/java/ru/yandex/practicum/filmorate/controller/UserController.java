@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
@@ -44,42 +44,38 @@ public class UserController {
     @GetMapping
     public Collection<User> getAllUsers() {
         log.debug("got request GET /users");
+
         return userService.getUsers();
     }
 
     @GetMapping(value = "/{id}")
     public User getUserById(@PathVariable("id") String userIdStr) {
         log.debug("got request GET /users/{}", userIdStr);
-        int userId = Integer.parseInt(userIdStr);
 
-        return userService.getUserById(userId);
+        return userService.getUserById(userIdStr);
     }
 
     @PutMapping(value = "/{id}/friends/{friendId}")
     public void addFriend(@PathVariable("id") String userIdStr,
                           @PathVariable("friendId") String friendIdStr) {
         log.debug("got request PUT /users/{}/friends/{}", userIdStr, friendIdStr);
-        int userId = Integer.parseInt(userIdStr);
-        int friendId = Integer.parseInt(friendIdStr);
 
-        userService.addFriend(userId, friendId);
+        userService.addFriend(userIdStr, friendIdStr);
     }
 
     @DeleteMapping(value = "/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") String userIdStr,
                              @PathVariable("friendId") String friendIdStr) {
         log.debug("got request DELETE /users/{}/friends/{}", userIdStr, friendIdStr);
-        int userId = Integer.parseInt(userIdStr);
-        int friendId = Integer.parseInt(friendIdStr);
 
-        userService.deleteFriend(userId, friendId);
+        userService.deleteFriend(userIdStr, friendIdStr);
     }
 
     @GetMapping(value = "/{id}/friends")
     public Collection<User> getUserFriends(@PathVariable("id") String userIdStr) {
         log.debug("got request GET /users/{}/friends", userIdStr);
-        int userId = Integer.parseInt(userIdStr);
-        return userService.getUserFriends(userId);
+
+        return userService.getUserFriends(userIdStr);
     }
 
     @GetMapping(value = "/{id}/friends/common/{otherId}")
@@ -87,16 +83,6 @@ public class UserController {
                                              @PathVariable("otherId") String otherUserIdStr) {
         log.debug("got request GET /users/{}/friends/common/{}", userIdStr, otherUserIdStr);
 
-        int userId = Integer.parseInt(userIdStr);
-        int otherUserId = Integer.parseInt(otherUserIdStr);
-
-        Set<User> commonUsers = new HashSet<>();
-
-        Collection<User> userFriends = userService.getUserFriends(userId);
-        commonUsers.addAll(userFriends);
-        Collection<User> otherUserFriends = userService.getUserFriends(otherUserId);
-        commonUsers.retainAll(otherUserFriends);
-
-        return new ArrayList<>(commonUsers);
+        return userService.getCommonFriends(userIdStr, otherUserIdStr);
     }
 }

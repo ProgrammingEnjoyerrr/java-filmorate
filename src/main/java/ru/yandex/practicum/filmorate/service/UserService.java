@@ -9,13 +9,15 @@ public interface UserService {
 
     User updateUser(User user);
 
-    User getUserById(int id);
+    User getUserById(String userId);
 
     Collection<User> getUsers();
 
-    void addFriend(int userId, int friendId);
+    void addFriend(String userId, String friendId);
 
-    void deleteFriend(int userId, int friendId);
+    void deleteFriend(String userId, String friendId);
 
-    Collection<User> getUserFriends(int userId);
+    Collection<User> getUserFriends(String userId);
+
+    Collection<User> getCommonFriends(String userId, String otherUserId);
 }

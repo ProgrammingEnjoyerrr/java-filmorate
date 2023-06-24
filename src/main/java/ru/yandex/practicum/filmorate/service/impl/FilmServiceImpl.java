@@ -52,7 +52,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void deleteUserLike(int filmId, int userId) {
         // will throw if not exist
-        userService.getUserById(userId);
+        userService.getUserById(Integer.toString(userId));
         log.info("removing user's (with id {}) like for film with id {}", userId, filmId);
         filmStorage.deleteUserLike(filmId, userId);
     }

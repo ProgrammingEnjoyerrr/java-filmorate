@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -31,8 +32,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(int userId) {
-        log.info("searching user with id {}.", userId);
+    public User getUserById(String userIdStr) {
+        log.info("searching user with id {}.", userIdStr);
+
+        int userId = Integer.parseInt(userIdStr);
         return userStorage.getUserById(userId);
     }
 
@@ -43,7 +46,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(String userIdStr, String friendIdStr) {
+        int userId = Integer.parseInt(userIdStr);
+        int friendId = Integer.parseInt(friendIdStr);
+
         ensureUserExists(userId);
         ensureUserExists(friendId);
 
@@ -54,7 +60,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteFriend(int userId, int friendId) {
+    public void deleteFriend(String userIdStr, String friendIdStr) {
+        int userId = Integer.parseInt(userIdStr);
+        int friendId = Integer.parseInt(friendIdStr);
+
         ensureUserExists(userId);
         ensureUserExists(friendId);
 
@@ -65,17 +74,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<User> getUserFriends(int userId) {
-        User user = getUserById(userId);
+    public Collection<User> getUserFriends(String userIdStr) {
+        User user = getUserById(userIdStr);
         Set<Long> friendIds = user.getFriends();
 
         Collection<User> userFriends = new ArrayList<>();
         for (Long friendId : friendIds) {
-            userFriends.add(getUserById(Math.toIntExact(friendId)));
+            String friendIdStr = Integer.toString(Math.toIntExact(friendId));
+            userFriends.add(getUserById(friendIdStr));
         }
         log.info("friends of user {} : {}.", user, userFriends);
 
         return userFriends;
+    }
+
+    @Override
+    public Collection<User> getCommonFriends(String userIdStr, String otherUserIdStr) {
+        Set<User> commonUsers = new HashSet<>();
+
+        Collection<User> userFriends = getUserFriends(userIdStr);
+        commonUsers.addAll(userFriends);
+        Collection<User> otherUserFriends = getUserFriends(otherUserIdStr);
+        commonUsers.retainAll(otherUserFriends);
+
+        return new ArrayList<>(commonUsers);
     }
 
     private void ensureUserExists(int userId) {
