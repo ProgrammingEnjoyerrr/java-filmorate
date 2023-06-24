@@ -17,36 +17,36 @@ public class FilmServiceImpl implements FilmService {
 
     private final UserService userService;
 
-    private final FilmStorage storage;
+    private final FilmStorage filmStorage;
 
     @Override
     public Film createFilm(Film film) {
         log.info("creating film {}.", film);
-        return storage.createFilm(film);
+        return filmStorage.createFilm(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
         log.info("updating film {}.", film);
-        return storage.updateFilm(film);
+        return filmStorage.updateFilm(film);
     }
 
     @Override
     public Collection<Film> getFilms() {
         log.info("searching all films.");
-        return storage.getFilms();
+        return filmStorage.getFilms();
     }
 
     @Override
     public Film getFilmById(int filmId) {
         log.info("searching film with id {}.", filmId);
-        return storage.getFilmById(filmId);
+        return filmStorage.getFilmById(filmId);
     }
 
     @Override
     public void addUserLike(int filmId, int userId) {
         log.info("adding user's (with id {}) like for film with id {}", userId, filmId);
-        storage.addUserLike(filmId, userId);
+        filmStorage.addUserLike(filmId, userId);
     }
 
     @Override
@@ -54,12 +54,12 @@ public class FilmServiceImpl implements FilmService {
         // will throw if not exist
         userService.getUserById(userId);
         log.info("removing user's (with id {}) like for film with id {}", userId, filmId);
-        storage.deleteUserLike(filmId, userId);
+        filmStorage.deleteUserLike(filmId, userId);
     }
 
     @Override
     public Collection<Film> getPopularFilms(int count) {
         log.info("searching top {} popular films", count);
-        return storage.getPopularFilms(count);
+        return filmStorage.getPopularFilms(count);
     }
 }

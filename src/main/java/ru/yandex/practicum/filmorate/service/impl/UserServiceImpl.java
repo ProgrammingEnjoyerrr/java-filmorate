@@ -16,30 +16,30 @@ import java.util.Set;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserStorage storage;
+    private final UserStorage userStorage;
 
     @Override
     public User createUser(User user) {
         log.info("creating user {}.", user);
-        return storage.createUser(user);
+        return userStorage.createUser(user);
     }
 
     @Override
     public User updateUser(User user) {
         log.info("updating user {}.", user);
-        return storage.updateUser(user);
+        return userStorage.updateUser(user);
     }
 
     @Override
     public User getUserById(int userId) {
         log.info("searching user with id {}.", userId);
-        return storage.getUserById(userId);
+        return userStorage.getUserById(userId);
     }
 
     @Override
     public Collection<User> getUsers() {
         log.info("searching all users.");
-        return storage.getUsers();
+        return userStorage.getUsers();
     }
 
     @Override
@@ -48,9 +48,9 @@ public class UserServiceImpl implements UserService {
         ensureUserExists(friendId);
 
         log.info("adding friend with id {} for user with id {}.", userId, friendId);
-        storage.addFriend(userId, friendId);
+        userStorage.addFriend(userId, friendId);
         log.info("adding friend with id {} for user with id {}.", friendId, userId);
-        storage.addFriend(friendId, userId);
+        userStorage.addFriend(friendId, userId);
     }
 
     @Override
@@ -59,9 +59,9 @@ public class UserServiceImpl implements UserService {
         ensureUserExists(friendId);
 
         log.info("removing friend with id {} for user with id {}.", userId, friendId);
-        storage.deleteFriend(userId, friendId);
+        userStorage.deleteFriend(userId, friendId);
         log.info("removing friend with id {} for user with id {}.", friendId, userId);
-        storage.deleteFriend(friendId, userId);
+        userStorage.deleteFriend(friendId, userId);
     }
 
     @Override
@@ -81,6 +81,6 @@ public class UserServiceImpl implements UserService {
     private void ensureUserExists(int userId) {
         // Если такого пользователя нет, вылетит исключение
         log.info("ensuring user with id {} exists.", userId);
-        storage.getUserById(userId);
+        userStorage.getUserById(userId);
     }
 }

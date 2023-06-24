@@ -17,14 +17,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         log.debug("got request POST /users");
         log.debug("request body: {}", user);
 
-        User created = service.createUser(user);
+        User created = userService.createUser(user);
         log.debug("user created");
 
         return created;
@@ -35,7 +35,7 @@ public class UserController {
         log.debug("got request PUT /users");
         log.debug("request body: {}", user);
 
-        User updated = service.updateUser(user);
+        User updated = userService.updateUser(user);
         log.debug("film updated");
 
         return updated;
@@ -44,7 +44,7 @@ public class UserController {
     @GetMapping
     public Collection<User> getAllUsers() {
         log.debug("got request GET /users");
-        return service.getUsers();
+        return userService.getUsers();
     }
 
     @GetMapping(value = "/{id}")
@@ -52,7 +52,7 @@ public class UserController {
         log.debug("got request GET /users/{}", userIdStr);
         int userId = Integer.parseInt(userIdStr);
 
-        return service.getUserById(userId);
+        return userService.getUserById(userId);
     }
 
     @PutMapping(value = "/{id}/friends/{friendId}")
@@ -62,7 +62,7 @@ public class UserController {
         int userId = Integer.parseInt(userIdStr);
         int friendId = Integer.parseInt(friendIdStr);
 
-        service.addFriend(userId, friendId);
+        userService.addFriend(userId, friendId);
     }
 
     @DeleteMapping(value = "/{id}/friends/{friendId}")
@@ -72,14 +72,14 @@ public class UserController {
         int userId = Integer.parseInt(userIdStr);
         int friendId = Integer.parseInt(friendIdStr);
 
-        service.deleteFriend(userId, friendId);
+        userService.deleteFriend(userId, friendId);
     }
 
     @GetMapping(value = "/{id}/friends")
     public Collection<User> getUserFriends(@PathVariable("id") String userIdStr) {
         log.debug("got request GET /users/{}/friends", userIdStr);
         int userId = Integer.parseInt(userIdStr);
-        return service.getUserFriends(userId);
+        return userService.getUserFriends(userId);
     }
 
     @GetMapping(value = "/{id}/friends/common/{otherId}")
@@ -92,9 +92,9 @@ public class UserController {
 
         Set<User> commonUsers = new HashSet<>();
 
-        Collection<User> userFriends = service.getUserFriends(userId);
+        Collection<User> userFriends = userService.getUserFriends(userId);
         commonUsers.addAll(userFriends);
-        Collection<User> otherUserFriends = service.getUserFriends(otherUserId);
+        Collection<User> otherUserFriends = userService.getUserFriends(otherUserId);
         commonUsers.retainAll(otherUserFriends);
 
         return new ArrayList<>(commonUsers);

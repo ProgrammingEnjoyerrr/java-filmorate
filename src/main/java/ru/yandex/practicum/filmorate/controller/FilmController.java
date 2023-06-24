@@ -17,14 +17,14 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class FilmController {
 
-    private final FilmService service;
+    private final FilmService filmService;
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         log.debug("got request POST /films");
         log.debug("request body: {}", film);
 
-        Film created = service.createFilm(film);
+        Film created = filmService.createFilm(film);
 
         log.debug("film created");
         return created;
@@ -35,7 +35,7 @@ public class FilmController {
         log.debug("got request PUT /films");
         log.debug("request body: {}", film);
 
-        Film updated = service.updateFilm(film);
+        Film updated = filmService.updateFilm(film);
 
         log.debug("film updated");
         return updated;
@@ -44,7 +44,7 @@ public class FilmController {
     @GetMapping
     public Collection<Film> getAllFilms() {
         log.debug("got request GET /films");
-        return service.getFilms();
+        return filmService.getFilms();
     }
 
     @GetMapping(value = "/{id}")
@@ -52,7 +52,7 @@ public class FilmController {
         log.debug("got request GET /films/{}", filmIdStr);
         int filmId = Integer.parseInt(filmIdStr);
 
-        return service.getFilmById(filmId);
+        return filmService.getFilmById(filmId);
     }
 
 
@@ -63,7 +63,7 @@ public class FilmController {
         int filmId = Integer.parseInt(filmIdStr);
         int userId = Integer.parseInt(userIdStr);
 
-        service.addUserLike(filmId, userId);
+        filmService.addUserLike(filmId, userId);
     }
 
     @DeleteMapping(value = "/{id}/like/{userId}")
@@ -73,13 +73,13 @@ public class FilmController {
         int filmId = Integer.parseInt(filmIdStr);
         int userId = Integer.parseInt(userIdStr);
 
-        service.deleteUserLike(filmId, userId);
+        filmService.deleteUserLike(filmId, userId);
     }
 
     @GetMapping(value = "/popular")
     public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count) {
         log.debug("got request GET /films/popular");
         log.debug("query params: count={}", count);
-        return service.getPopularFilms(count);
+        return filmService.getPopularFilms(count);
     }
 }
