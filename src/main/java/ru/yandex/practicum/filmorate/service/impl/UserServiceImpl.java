@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService {
 
     private void ensureUserExists(int userId) {
         // Если такого пользователя нет, вылетит исключение
-        log.info("ensuring user with id {} exists.", userId);
         storage.getUserById(userId);
     }
 }
