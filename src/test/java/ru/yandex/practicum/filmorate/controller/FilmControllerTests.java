@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import ru.yandex.practicum.filmorate.exception.FilmValidationException;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.ConstraintViolationException;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@WebMvcTest
+@SpringBootTest
 class FilmControllerTests {
 
     @Autowired
@@ -62,7 +62,7 @@ class FilmControllerTests {
     void updateUnknownFilmShouldThrow() {
         final Film film = new Film(9999, "Film Updated", "New film update description", LocalDate.parse("1989-04-17", FORMATTER), 190);
 
-        final FilmValidationException exception = assertThrows(FilmValidationException.class,
+        final FilmNotFoundException exception = assertThrows(FilmNotFoundException.class,
                 () -> filmController.update(film));
         assertEquals("Попытка обновить фильм с несуществующим id 9999", exception.getMessage());
     }

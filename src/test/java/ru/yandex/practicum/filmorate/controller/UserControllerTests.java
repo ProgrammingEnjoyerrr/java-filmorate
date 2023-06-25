@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import ru.yandex.practicum.filmorate.exception.UserValidationException;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolationException;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@WebMvcTest
+@SpringBootTest
 class UserControllerTests {
 
     @Autowired
@@ -65,7 +65,7 @@ class UserControllerTests {
         final User user = new User(9999, "doloreUpdate", "est adipisicing", "mail@yandex.ru",
                 LocalDate.parse("1976-09-20", FORMATTER));
 
-        final UserValidationException exception = assertThrows(UserValidationException.class,
+        final UserNotFoundException exception = assertThrows(UserNotFoundException.class,
                 () -> userController.update(user));
         assertEquals("Попытка обновить пользователя с несуществующим id 9999", exception.getMessage());
     }
