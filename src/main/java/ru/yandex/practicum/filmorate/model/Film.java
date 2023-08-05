@@ -1,6 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.AfterDate;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.MaxByteLength;
 
@@ -31,6 +34,8 @@ public class Film {
 
     private final Set<Long> userLikes;
 
+    private final Set<Genre> genres;
+
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
         this.id = id;
         this.name = name;
@@ -38,6 +43,7 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.userLikes = new HashSet<>();
+        this.genres = new HashSet<>();
     }
 
     public boolean addUserLike(Long userId) {
