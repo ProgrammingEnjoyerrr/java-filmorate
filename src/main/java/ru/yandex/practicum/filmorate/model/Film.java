@@ -34,6 +34,9 @@ public class Film {
 
     private final Set<Long> userLikes;
 
+    @Setter
+    private Mpa mpa;
+
     private final Set<Genre> genres;
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
@@ -43,6 +46,7 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.userLikes = new HashSet<>();
+        this.mpa = null;
         this.genres = new HashSet<>();
     }
 
