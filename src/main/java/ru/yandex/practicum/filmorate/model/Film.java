@@ -37,7 +37,8 @@ public class Film {
     @Setter
     private Mpa mpa;
 
-    private final Set<Genre> genres;
+    @Setter
+    private Set<Genre> genres;
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
         this.id = id;
