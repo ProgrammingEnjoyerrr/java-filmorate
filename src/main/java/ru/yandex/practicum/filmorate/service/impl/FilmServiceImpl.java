@@ -15,10 +15,8 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -114,7 +112,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     private void assignGenres(Film film) {
-        Set<Genre> genres = film.getGenres();
+        List<Genre> genres = film.getGenres();
         if (genres == null || genres.isEmpty()) {
             return;
         }
@@ -129,6 +127,12 @@ public class FilmServiceImpl implements FilmService {
             newGenres.add(genreOpt.get());
         }
 
-        film.setGenres(newGenres);
+        // TODO assert genres.size() == newGenres.size() -> throw
+
+        // Postman - тесты хотят от меня упорядоченности(
+        film.setGenres(newGenres
+                .stream()
+                .sorted(Comparator.comparing(Genre::getId))
+                .collect(Collectors.toList()));
     }
 }

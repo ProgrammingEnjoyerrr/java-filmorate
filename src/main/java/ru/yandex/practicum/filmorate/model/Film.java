@@ -10,7 +10,9 @@ import ru.yandex.practicum.filmorate.utils.validation.constraints.MaxByteLength;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -38,7 +40,7 @@ public class Film {
     private Mpa mpa;
 
     @Setter
-    private Set<Genre> genres;
+    private List<Genre> genres;
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
         this.id = id;
@@ -48,7 +50,7 @@ public class Film {
         this.duration = duration;
         this.userLikes = new HashSet<>();
         this.mpa = null;
-        this.genres = new HashSet<>();
+        this.genres = new ArrayList<>();
     }
 
     public boolean addUserLike(Long userId) {

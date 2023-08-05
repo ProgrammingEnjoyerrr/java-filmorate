@@ -32,7 +32,7 @@ public class InMemoryFilmStorage implements FilmStorage {
                     "с несуществующим id " + film.getId());
         }
 
-        idToFilm.put(id, film);
+        idToFilm.put(film.getId(), film);
         return film;
     }
 
