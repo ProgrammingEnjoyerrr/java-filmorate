@@ -35,7 +35,7 @@ public class InMemoryUserStorage implements UserStorage {
                     "с несуществующим id " + user.getId());
         }
 
-        idToUser.put(id, user);
+        idToUser.put(user.getId(), user);
         return user;
     }
 
