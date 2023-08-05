@@ -55,8 +55,6 @@ public class UserServiceImpl implements UserService {
 
         log.info("adding friend with id {} for user with id {}.", userId, friendId);
         userStorage.addFriend(userId, friendId);
-        log.info("adding friend with id {} for user with id {}.", friendId, userId);
-        userStorage.addFriend(friendId, userId);
     }
 
     @Override
