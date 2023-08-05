@@ -1,13 +1,15 @@
 package ru.yandex.practicum.filmorate.storage.inmemory;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Qualifier("inMemoryMpaStorage")
+@Component
 public class InMemoryMpaStorage implements MpaStorage {
     private final Map<Integer, Mpa> idToMpa = Map.of(
             1, new Mpa(1, "G"),
@@ -19,7 +21,10 @@ public class InMemoryMpaStorage implements MpaStorage {
 
     @Override
     public Collection<Mpa> getAllMpas() {
-        return new ArrayList<>(idToMpa.values());
+        return idToMpa.values()
+                .stream()
+                .sorted(Comparator.comparingInt(Mpa::getId))
+                .collect(Collectors.toList());
     }
 
     @Override
