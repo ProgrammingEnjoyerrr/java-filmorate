@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -12,9 +13,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +24,10 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("user_id");
@@ -48,7 +51,18 @@ public class UserDbStorage implements UserStorage {
     public User getUserById(int userId) {
         String sqlQuery = "SELECT user_id, login, name, email, birthday FROM users WHERE user_id=?";
         try {
-            return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToUser, userId);
+            User user = jdbcTemplate.queryForObject(sqlQuery, this::mapRowToUser, userId);
+
+            // TODO переработать логику хранения данных друзей
+            String userFriendsQuery = "SELECT friend_id FROM user_friends WHERE user_id=?";
+
+            SqlRowSet friendsRows = jdbcTemplate.queryForRowSet(userFriendsQuery, user.getId());
+            Set<Long> friends = new HashSet<>();
+            while (friendsRows.next()) {
+                friends.add(friendsRows.getLong("friend_id"));
+            }
+            user.setFriends(friends);
+            return user;
         } catch (DataAccessException e) {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден.");
         }
@@ -77,12 +91,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public void deleteFriend(int userId, int friendId) {
         String sqlQuery = "DELETE FROM user_friends where user_id = ? and friend_id = ?";
-
-        int updatedRows = jdbcTemplate.update(sqlQuery, userId, friendId);
-        if (updatedRows == 0) {
-            throw new RuntimeException("Ошибка при удалении дружбы между пользоветелем" +
-                    " с id = " + userId + " и другом с id = " + friendId);
-        }
+        jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     private Map<String, Object> toMap(User user) {
