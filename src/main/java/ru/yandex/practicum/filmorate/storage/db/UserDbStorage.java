@@ -1,21 +1,24 @@
 package ru.yandex.practicum.filmorate.storage.db;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 @Qualifier("userDbStorage")
 public class UserDbStorage implements UserStorage {
 
@@ -27,7 +30,6 @@ public class UserDbStorage implements UserStorage {
                 .withTableName("users")
                 .usingGeneratedKeyColumns("user_id");
         user.setId(simpleJdbcInsert.executeAndReturnKey(toMap(user)).intValue());
-        log.info("Поступил запрос на добавление пользователя. Пользователь добавлен.");
         return user;
     }
 
@@ -38,7 +40,12 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUserById(int userId) {
-        return null;
+        String sqlQuery = "SELECT user_id, login, name, email, birthday FROM users WHERE user_id=?";
+        try {
+            return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToUser, userId);
+        } catch (DataAccessException e) {
+            throw new UserNotFoundException("Пользователь с id " + userId + " не найден.");
+        }
     }
 
     @Override
@@ -63,5 +70,15 @@ public class UserDbStorage implements UserStorage {
         values.put("name", user.getName());
         values.put("birthday", user.getBirthday());
         return values;
+    }
+
+    private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
+        return User.builder()
+                .id((int) resultSet.getLong("user_id"))
+                .login(resultSet.getString("login"))
+                .name(resultSet.getString("name"))
+                .email(resultSet.getString("email"))
+                .birthday(resultSet.getDate("birthday").toLocalDate())
+                .build();
     }
 }
