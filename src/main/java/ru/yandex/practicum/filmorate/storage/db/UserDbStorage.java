@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.db;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
@@ -35,7 +34,14 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        return null;
+        String sqlQuery = "UPDATE users SET login = ?, name = ?, email = ?, birthday = ? WHERE user_id = ?";
+        int rowsUpdated = jdbcTemplate.update(sqlQuery, user.getLogin(), user.getName(),
+                user.getEmail(), user.getBirthday(), user.getId());
+        if (rowsUpdated > 0) {
+            return user;
+        }
+        throw new UserNotFoundException("Попытка обновить пользователя с несуществующим id "
+                + user.getId());
     }
 
     @Override
@@ -50,17 +56,33 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Collection<User> getUsers() {
-        return null;
+        String sqlQuery = "SELECT user_id, login, name, email, birthday FROM users";
+        return jdbcTemplate.query(sqlQuery, this::mapRowToUser);
     }
 
     @Override
     public void addFriend(int userId, int friendId) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("user_friends")
+                .usingGeneratedKeyColumns("id");
 
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", userId);
+        map.put("friend_id", friendId);
+        map.put("friendship_status", true);
+
+        simpleJdbcInsert.execute(map);
     }
 
     @Override
     public void deleteFriend(int userId, int friendId) {
+        String sqlQuery = "DELETE FROM user_friends where user_id = ? and friend_id = ?";
 
+        int updatedRows = jdbcTemplate.update(sqlQuery, userId, friendId);
+        if (updatedRows == 0) {
+            throw new RuntimeException("Ошибка при удалении дружбы между пользоветелем" +
+                    " с id = " + userId + " и другом с id = " + friendId);
+        }
     }
 
     private Map<String, Object> toMap(User user) {
