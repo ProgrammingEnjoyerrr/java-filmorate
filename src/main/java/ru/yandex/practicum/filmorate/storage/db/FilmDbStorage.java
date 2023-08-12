@@ -230,12 +230,13 @@ public class FilmDbStorage implements FilmStorage {
             int filmId = film.getId();
             int genreId = genre.getId();
             log.info("filmId = {}, genreId = {}", filmId, genreId);
+            String sqlQuery = "DELETE FROM film_to_genres WHERE film_id = ?";
+            jdbcTemplate.update(sqlQuery, filmId);
+
             String sql = "UPDATE film_to_genres SET film_id = ?, genre_id = ? WHERE film_id = ?";
-//                jdbcTemplate.update(sql, filmId, genreId, filmId);
             int rowsUpdated = jdbcTemplate.update(sql, filmId, genreId, filmId);
             if (rowsUpdated == 0) {
                 addIntoFilmToGenresTable(film);
-                //throw new RuntimeException("updateFilmToGenresTable failed");
             }
         }
     }
