@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
 
-    @Qualifier("inMemoryGenreStorage")
+    @Qualifier("genreDbStorage")
     private final GenreStorage genreStorage;
 
     @Override

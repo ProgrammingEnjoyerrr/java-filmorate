@@ -30,7 +30,7 @@ public class FilmServiceImpl implements FilmService {
     @Qualifier("mpaDbStorage")
     private final MpaStorage mpaStorage;
 
-    @Qualifier("inMemoryGenreStorage")
+    @Qualifier("genreDbStorage")
     private final GenreStorage genreStorage;
 
     @Override
