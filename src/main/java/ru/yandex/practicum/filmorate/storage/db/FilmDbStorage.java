@@ -158,6 +158,7 @@ public class FilmDbStorage implements FilmStorage {
         if (mpaRatingId != null) {
             String sqlQuery = "SELECT type FROM mpa_rating WHERE mpa_rating_id=?";
             SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sqlQuery, mpaRatingId);
+            sqlRowSet.next();
             String type = sqlRowSet.getString("type");
             Mpa mpa = new Mpa(mpaRatingId, type);
             film.setMpa(mpa);
@@ -172,6 +173,7 @@ public class FilmDbStorage implements FilmStorage {
             int genreId = sqlRowSet.getInt("genre_id");
             String subSqlQuery = "SELECT name FROM genres WHERE genre_id=?";
             SqlRowSet subSqlRowSet = jdbcTemplate.queryForRowSet(subSqlQuery, genreId);
+            subSqlRowSet.next();
             String name = subSqlRowSet.getString("name");
 
             final Genre genre = new Genre(genreId, name);

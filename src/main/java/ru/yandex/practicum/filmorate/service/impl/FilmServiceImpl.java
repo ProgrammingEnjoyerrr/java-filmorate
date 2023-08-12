@@ -25,6 +25,7 @@ public class FilmServiceImpl implements FilmService {
 
     private final UserService userService;
 
+    @Qualifier("filmDbStorage")
     private final FilmStorage filmStorage;
 
     @Qualifier("mpaDbStorage")
