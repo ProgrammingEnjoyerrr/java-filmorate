@@ -27,7 +27,7 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmStorage filmStorage;
 
-    @Qualifier("inMemoryMpaStorage")
+    @Qualifier("mpaDbStorage")
     private final MpaStorage mpaStorage;
 
     @Qualifier("inMemoryGenreStorage")

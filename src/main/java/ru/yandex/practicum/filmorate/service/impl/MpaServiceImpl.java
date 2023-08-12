@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MpaServiceImpl implements MpaService {
 
-    @Qualifier("inMemoryMpaStorage")
+    @Qualifier("mpaDbStorage")
     private final MpaStorage mpaStorage;
 
     @Override
