@@ -6,6 +6,7 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
+@Builder
 public class Mpa {
     @Setter
     private Integer id;
