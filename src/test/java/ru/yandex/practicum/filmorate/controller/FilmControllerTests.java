@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
+@AutoConfigureTestDatabase
 class FilmControllerTests {
 
     @Autowired
@@ -33,6 +36,7 @@ class FilmControllerTests {
     @Order(1)
     void createFilmShouldBeOk() {
         final Film film = new Film(ANY_ID, "nisi eiusmod", "adipisicing", LocalDate.parse("1967-03-25", FORMATTER), 100);
+        film.setMpa(new Mpa(1, null));
 
         final Film created = filmController.create(film);
 
@@ -47,6 +51,7 @@ class FilmControllerTests {
     @Order(2)
     void updateFilmShouldBeOk() {
         final Film film = new Film(1, "Film Updated", "New film update description", LocalDate.parse("1989-04-17", FORMATTER), 190);
+        film.setMpa(new Mpa(1, null));
 
         final Film updated = filmController.update(film);
 
@@ -61,6 +66,7 @@ class FilmControllerTests {
     @Order(3)
     void updateUnknownFilmShouldThrow() {
         final Film film = new Film(9999, "Film Updated", "New film update description", LocalDate.parse("1989-04-17", FORMATTER), 190);
+        film.setMpa(new Mpa(1, null));
 
         final FilmNotFoundException exception = assertThrows(FilmNotFoundException.class,
                 () -> filmController.update(film));
