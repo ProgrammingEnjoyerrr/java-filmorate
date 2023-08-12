@@ -158,6 +158,7 @@ public class FilmDbStorage implements FilmStorage {
         Integer mpaRatingId = filmDAO.getMpaRatingId();
         assignMpa(film, mpaRatingId);
         assignGenres(film);
+        assignLikes(film);
 
         return film;
     }
@@ -191,6 +192,15 @@ public class FilmDbStorage implements FilmStorage {
         film.setGenres(genres.stream()
                 .sorted(Comparator.comparing(Genre::getId))
                 .collect(Collectors.toList()));
+    }
+
+    private void assignLikes(Film film) {
+        String sqlQuery = "SELECT user_id FROM film_to_likes WHERE film_id = ?";
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sqlQuery, film.getId());
+        while (sqlRowSet.next()) {
+            long userId = sqlRowSet.getLong("user_id");
+            film.addUserLike(userId);
+        }
     }
 
     private void addIntoFilmToGenresTable(Film film) {
