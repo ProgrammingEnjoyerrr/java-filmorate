@@ -60,7 +60,6 @@ class FilmDbStorageTest {
         assertEquals(film.getGenres(), created1.getGenres());
         assertEquals(film.getUserLikes(), created1.getUserLikes());
 
-        // film -> Film id=2 create
         Film film2 = Film.builder()
                 .name("New film")
                 .releaseDate(LocalDate.of(1999, 4, 30))
@@ -85,25 +84,52 @@ class FilmDbStorageTest {
     @Test
     @Order(2)
     void updateFilm() {
-        Film film = Film.builder()
-                .id(1)
-                .name("Film Updated")
-                .description("New film update decription")
-                .releaseDate(LocalDate.of(1989, 4, 17))
-                .duration(190)
-                .build();
-        film.setMpa(new Mpa(5, null));
-        film.setGenres(List.of(new Genre(2, null)));
+        {
+            // update film without genre
+            Film film = Film.builder()
+                    .id(1)
+                    .name("Film Updated")
+                    .description("New film update decription")
+                    .releaseDate(LocalDate.of(1989, 4, 17))
+                    .duration(190)
+                    .build();
+            film.setMpa(new Mpa(5, null));
+            film.setGenres(new ArrayList<>());
 
-        Film updated = filmDbStorage.updateFilm(film);
-        assertEquals(1, updated.getId());
-        assertEquals(film.getName(), updated.getName());
-        assertEquals(film.getDescription(), updated.getDescription());
-        assertEquals(film.getReleaseDate(), updated.getReleaseDate());
-        assertEquals(film.getDuration(), updated.getDuration());
-        assertEquals(new Mpa(5, "NC-17"), updated.getMpa());
-        assertEquals(List.of(new Genre(2, "Драма")), updated.getGenres());
-        assertEquals(film.getUserLikes(), updated.getUserLikes());
+            Film updated = filmDbStorage.updateFilm(film);
+            assertEquals(1, updated.getId());
+            assertEquals(film.getName(), updated.getName());
+            assertEquals(film.getDescription(), updated.getDescription());
+            assertEquals(film.getReleaseDate(), updated.getReleaseDate());
+            assertEquals(film.getDuration(), updated.getDuration());
+            assertEquals(new Mpa(5, "NC-17"), updated.getMpa());
+            assertEquals(film.getGenres(), updated.getGenres());
+            assertEquals(film.getUserLikes(), updated.getUserLikes());
+        }
+
+        {
+            // update film with genre
+            Film film = Film.builder()
+                    .id(1)
+                    .name("Film Updated")
+                    .description("New film update decription")
+                    .releaseDate(LocalDate.of(1989, 4, 17))
+                    .duration(190)
+                    .build();
+            film.setMpa(new Mpa(5, null));
+            film.setGenres(List.of(new Genre(2, null)));
+
+            Film updated = filmDbStorage.updateFilm(film);
+            assertEquals(1, updated.getId());
+            assertEquals(film.getName(), updated.getName());
+            assertEquals(film.getDescription(), updated.getDescription());
+            assertEquals(film.getReleaseDate(), updated.getReleaseDate());
+            assertEquals(film.getDuration(), updated.getDuration());
+            assertEquals(new Mpa(5, "NC-17"), updated.getMpa());
+            assertEquals(List.of(new Genre(2, "Драма")), updated.getGenres());
+            assertEquals(film.getGenres(), updated.getGenres());
+            assertEquals(film.getUserLikes(), updated.getUserLikes());
+        }
     }
 
     @Test
@@ -242,95 +268,5 @@ class FilmDbStorageTest {
 
         Film got = mostPopular.get(0);
         assertEquals(1, got.getId());
-    }
-
-    @Test
-    @Order(100)
-    void postManScenario() {
-        Film film = Film.builder()
-                .name("nisi eiusmod")
-                .description("adipisicing")
-                .releaseDate(LocalDate.of(1967, 3, 25))
-                .duration(100)
-                .build();
-        film.setMpa(new Mpa(1, null));
-
-        Film created = filmDbStorage.createFilm(film);
-
-        assertEquals(1, created.getId());
-        assertEquals(film.getName(), created.getName());
-        assertEquals(film.getDescription(), created.getDescription());
-        assertEquals(film.getReleaseDate(), created.getReleaseDate());
-        assertEquals(film.getDuration(), created.getDuration());
-        assertEquals(new Mpa(1, "G"), created.getMpa());
-        //assertEquals(List.of(new Genre(6, "Боевик")), created.getGenres());
-        assertEquals(film.getGenres(), created.getGenres());
-        assertEquals(film.getGenres(), created.getGenres());
-        assertEquals(film.getUserLikes(), created.getUserLikes());
-
-        film = Film.builder()
-                .id(film.getId())
-                .name("Film Updated")
-                .description("New film update decription")
-                .releaseDate(LocalDate.of(1989, 4, 17))
-                .duration(190)
-                .build();
-        film.setMpa(new Mpa(4, null));
-        //film.setGenres(List.of(new Genre(2, null)));
-
-        Film updated = filmDbStorage.updateFilm(film);
-        assertEquals(1, updated.getId());
-        assertEquals(film.getName(), updated.getName());
-        assertEquals(film.getDescription(), updated.getDescription());
-        assertEquals(film.getReleaseDate(), updated.getReleaseDate());
-        assertEquals(film.getDuration(), updated.getDuration());
-        assertEquals(new Mpa(4, "R"), updated.getMpa());
-        //assertEquals(List.of(new Genre(2, "Драма")), updated.getGenres());
-        assertEquals(film.getGenres(), updated.getGenres());
-        assertEquals(film.getUserLikes(), updated.getUserLikes());
-
-        film = Film.builder()
-                .id(film.getId())
-                .name("Film Updated")
-                .description("New film update decription")
-                .releaseDate(LocalDate.of(1989, 4, 17))
-                .duration(190)
-                .build();
-        film.setMpa(new Mpa(5, null));
-        film.setGenres(List.of(new Genre(2, null)));
-
-        updated = filmDbStorage.updateFilm(film);
-        assertEquals(1, updated.getId());
-        assertEquals(film.getName(), updated.getName());
-        assertEquals(film.getDescription(), updated.getDescription());
-        assertEquals(film.getReleaseDate(), updated.getReleaseDate());
-        assertEquals(film.getDuration(), updated.getDuration());
-        assertEquals(new Mpa(5, "NC-17"), updated.getMpa());
-        assertEquals(List.of(new Genre(2, "Драма")), updated.getGenres());
-        //assertEquals(film.getGenres(), updated.getGenres());
-        assertEquals(film.getUserLikes(), updated.getUserLikes());
-
-        // Film id=1 update remove genre
-        film = Film.builder()
-                .id(film.getId())
-                .name("Film Updated")
-                .releaseDate(LocalDate.of(1989, 4, 17))
-                .description("New film update decription")
-                .duration(190)
-                .build();
-        film.setMpa(new Mpa(5, null));
-        film.setGenres(new ArrayList<>());
-
-        updated = filmDbStorage.updateFilm(film);
-        assertEquals(1, updated.getId());
-        assertEquals(film.getName(), updated.getName());
-        assertEquals(film.getDescription(), updated.getDescription());
-        assertEquals(film.getReleaseDate(), updated.getReleaseDate());
-        assertEquals(film.getDuration(), updated.getDuration());
-        assertEquals(new Mpa(5, "NC-17"), updated.getMpa());
-        //assertEquals(List.of(new Genre(2, "Драма")), updated.getGenres());
-        assertEquals(film.getGenres(), updated.getGenres());
-        assertEquals(film.getUserLikes(), updated.getUserLikes());
-        // end of "Film id=1 update remove genre"
     }
 }
