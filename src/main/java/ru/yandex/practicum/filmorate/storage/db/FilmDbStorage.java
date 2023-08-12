@@ -218,18 +218,24 @@ public class FilmDbStorage implements FilmStorage {
     private void updateFilmToGenresTable(Film film) {
         // update film_to_genres
         List<Genre> genres = film.getGenres();
-        if (genres != null && !genres.isEmpty()) {
-            for (final Genre genre : genres) {
-                int filmId = film.getId();
-                int genreId = genre.getId();
-                log.info("filmId = {}, genreId = {}", filmId, genreId);
-                String sql = "UPDATE film_to_genres SET film_id = ?, genre_id = ? WHERE film_id = ?";
+        if (genres == null || genres.isEmpty()) {
+            // delete from film_to_genres
+            String sqlQuery = "DELETE FROM film_to_genres WHERE film_id = ?";
+            jdbcTemplate.update(sqlQuery, film.getId());
+            return;
+        }
+
+
+        for (final Genre genre : genres) {
+            int filmId = film.getId();
+            int genreId = genre.getId();
+            log.info("filmId = {}, genreId = {}", filmId, genreId);
+            String sql = "UPDATE film_to_genres SET film_id = ?, genre_id = ? WHERE film_id = ?";
 //                jdbcTemplate.update(sql, filmId, genreId, filmId);
-                int rowsUpdated = jdbcTemplate.update(sql, filmId, genreId, filmId);
-                if (rowsUpdated == 0) {
-                    addIntoFilmToGenresTable(film);
-                    //throw new RuntimeException("updateFilmToGenresTable failed");
-                }
+            int rowsUpdated = jdbcTemplate.update(sql, filmId, genreId, filmId);
+            if (rowsUpdated == 0) {
+                addIntoFilmToGenresTable(film);
+                //throw new RuntimeException("updateFilmToGenresTable failed");
             }
         }
     }
