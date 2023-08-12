@@ -14,7 +14,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -110,7 +112,27 @@ class UserDbStorageTests {
         boba = userStorage.createUser(boba);
 
         userStorage.addFriend(biba.getId(), boba.getId());
+        User gotBiba1 = userStorage.getUserById(biba.getId());
+        assertEquals(Set.of((long) boba.getId()), gotBiba1.getFriends());
+        User gotBoba1 = userStorage.getUserById(boba.getId());
+        assertEquals(new HashSet<>(), gotBoba1.getFriends());
+
+        userStorage.addFriend(boba.getId(), biba.getId());
+        User gotBiba2 = userStorage.getUserById(biba.getId());
+        assertEquals(Set.of((long) boba.getId()), gotBiba2.getFriends());
+        User gotBoba2 = userStorage.getUserById(boba.getId());
+        assertEquals(Set.of((long) biba.getId()), gotBoba2.getFriends());
 
         userStorage.deleteFriend(biba.getId(), boba.getId());
+        User gotBiba3 = userStorage.getUserById(biba.getId());
+        assertEquals(new HashSet<>(), gotBiba3.getFriends());
+        User gotBoba3 = userStorage.getUserById(boba.getId());
+        assertEquals(Set.of((long) biba.getId()), gotBoba3.getFriends());
+
+        userStorage.deleteFriend(boba.getId(), biba.getId());
+        User gotBiba4 = userStorage.getUserById(biba.getId());
+        assertEquals(new HashSet<>(), gotBiba4.getFriends());
+        User gotBoba4 = userStorage.getUserById(boba.getId());
+        assertEquals(new HashSet<>(), gotBoba4.getFriends());
     }
 }
