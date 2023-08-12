@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage.db;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 @Qualifier("filmDbStorage")
+@Slf4j
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -34,6 +36,9 @@ public class FilmDbStorage implements FilmStorage {
                 .withTableName("films")
                 .usingGeneratedKeyColumns("film_id");
         film.setId(simpleJdbcInsert.executeAndReturnKey(toMap(film)).intValue());
+        assignMpa(film, film.getMpa().getId());
+        addIntoFilmToGenresTable(film);
+        assignGenres(film);
         return film;
     }
 
@@ -49,6 +54,9 @@ public class FilmDbStorage implements FilmStorage {
                 film.getMpa().getId(),
                 film.getId());
         if (rowsUpdated > 0) {
+            updateFilmToGenresTable(film);
+            assignMpa(film, film.getMpa().getId());
+            assignGenres(film);
             return film;
         }
 
@@ -147,14 +155,14 @@ public class FilmDbStorage implements FilmStorage {
                 .duration(filmDAO.getDuration())
                 .build();
 
-        assignMpa(filmDAO, film);
+        Integer mpaRatingId = filmDAO.getMpaRatingId();
+        assignMpa(film, mpaRatingId);
         assignGenres(film);
 
         return film;
     }
 
-    private void assignMpa(FilmDAO filmDAO, Film film) {
-        Integer mpaRatingId = filmDAO.getMpaRatingId();
+    private void assignMpa(Film film, Integer mpaRatingId) {
         if (mpaRatingId != null) {
             String sqlQuery = "SELECT type FROM mpa_rating WHERE mpa_rating_id=?";
             SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sqlQuery, mpaRatingId);
@@ -183,5 +191,46 @@ public class FilmDbStorage implements FilmStorage {
         film.setGenres(genres.stream()
                 .sorted(Comparator.comparing(Genre::getId))
                 .collect(Collectors.toList()));
+    }
+
+    private void addIntoFilmToGenresTable(Film film) {
+        if (film.getGenres() == null || film.getGenres().isEmpty()) {
+            return;
+        }
+
+        for (final Genre genre : film.getGenres()) {
+            SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                    .withTableName("film_to_genres")
+                    .usingGeneratedKeyColumns("id");
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("film_id", film.getId());
+            map.put("genre_id", genre.getId());
+
+            int rowInserted = simpleJdbcInsert.execute(map);
+            if (rowInserted == 0) {
+                log.error("not inserted");
+            }
+        }
+    }
+
+
+    private void updateFilmToGenresTable(Film film) {
+        // update film_to_genres
+        List<Genre> genres = film.getGenres();
+        if (genres != null && !genres.isEmpty()) {
+            for (final Genre genre : genres) {
+                int filmId = film.getId();
+                int genreId = genre.getId();
+                log.info("filmId = {}, genreId = {}", filmId, genreId);
+                String sql = "UPDATE film_to_genres SET film_id = ?, genre_id = ? WHERE film_id = ?";
+//                jdbcTemplate.update(sql, filmId, genreId, filmId);
+                int rowsUpdated = jdbcTemplate.update(sql, filmId, genreId, filmId);
+                if (rowsUpdated == 0) {
+                    addIntoFilmToGenresTable(film);
+                    //throw new RuntimeException("updateFilmToGenresTable failed");
+                }
+            }
+        }
     }
 }
