@@ -11,7 +11,7 @@ public interface FilmStorage {
 
     Collection<Film> getFilms();
 
-    Film getFilmById(int userId);
+    Film getFilmById(int filmId);
 
     void addUserLike(int filmId, int userId);
 

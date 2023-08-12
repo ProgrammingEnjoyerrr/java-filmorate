@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.AfterDate;
 import ru.yandex.practicum.filmorate.utils.validation.constraints.MaxByteLength;
 
@@ -42,6 +39,7 @@ public class Film {
     @Setter
     private List<Genre> genres;
 
+    @Builder
     public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration) {
         this.id = id;
         this.name = name;

@@ -40,7 +40,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film getFilmById(int filmId) {
         final Film film = idToFilm.get(filmId);
         if (film == null) {
-            throw new UserNotFoundException("Фильм с id " + filmId + " не найден.");
+            throw new FilmNotFoundException("Фильм с id " + filmId + " не найден.");
         }
 
         return film;
