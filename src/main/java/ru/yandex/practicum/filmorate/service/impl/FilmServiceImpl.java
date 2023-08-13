@@ -104,12 +104,14 @@ public class FilmServiceImpl implements FilmService {
         }
 
         int mpaId = mpa.getId();
+        log.info("attempt to assign MPA with id {} to film with id {}", mpaId, film.getId());
         Optional<Mpa> mpaOpt = mpaStorage.getMpaById(mpaId);
         if (mpaOpt.isEmpty()) {
             throw new MpaNotFoundException("Попытка получить MPA с несуществующим id " + mpaId);
         }
 
         film.setMpa(mpaOpt.get());
+        log.info("mpa {} assigned to film with id {}", mpaOpt.get(), film.getId());
     }
 
     private void assignGenres(Film film) {
@@ -118,6 +120,7 @@ public class FilmServiceImpl implements FilmService {
             return;
         }
 
+        log.info("attempt to assign Genres to film with id {}", film.getId());
         Set<Genre> newGenres = new HashSet<>();
         for (Genre genre : genres) {
             int id = genre.getId();
@@ -135,5 +138,6 @@ public class FilmServiceImpl implements FilmService {
                 .stream()
                 .sorted(Comparator.comparing(Genre::getId))
                 .collect(Collectors.toList()));
+        log.info("genres {} assigned to film with id {}", film.getGenres(), film.getId());
     }
 }
