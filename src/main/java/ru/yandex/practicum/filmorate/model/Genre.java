@@ -11,5 +11,5 @@ public class Genre {
     @Setter
     private Integer id;
 
-    String name;
+    private final String name;
 }

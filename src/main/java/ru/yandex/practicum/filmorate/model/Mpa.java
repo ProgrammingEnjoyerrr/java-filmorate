@@ -11,5 +11,5 @@ public class Mpa {
     @Setter
     private Integer id;
 
-    String name;
+    private final String name;
 }
