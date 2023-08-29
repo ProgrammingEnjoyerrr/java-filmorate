@@ -30,8 +30,10 @@ public class User {
     @NotInFuture
     private final LocalDate birthday;
 
-    private final Set<Long> friends;
+    @Setter
+    private Set<Long> friends;
 
+    @Builder
     public User(Integer id, String login, String name, String email, LocalDate birthday) {
         this.id = id;
         this.login = login;

@@ -2,13 +2,21 @@ package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.exception.MpaNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,17 +25,32 @@ public class FilmServiceImpl implements FilmService {
 
     private final UserService userService;
 
+    @Qualifier("filmDbStorage")
     private final FilmStorage filmStorage;
+
+    @Qualifier("mpaDbStorage")
+    private final MpaStorage mpaStorage;
+
+    @Qualifier("genreDbStorage")
+    private final GenreStorage genreStorage;
 
     @Override
     public Film createFilm(Film film) {
         log.info("creating film {}.", film);
+
+        assignMpa(film);
+        assignGenres(film);
+
         return filmStorage.createFilm(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
         log.info("updating film {}.", film);
+
+        assignMpa(film);
+        assignGenres(film);
+
         return filmStorage.updateFilm(film);
     }
 
@@ -72,5 +95,49 @@ public class FilmServiceImpl implements FilmService {
 
         log.info("searching top {} popular films", count);
         return filmStorage.getPopularFilms(count);
+    }
+
+    private void assignMpa(Film film) {
+        Mpa mpa = film.getMpa();
+        if (mpa == null) {
+            return;
+        }
+
+        int mpaId = mpa.getId();
+        log.info("attempt to assign MPA with id {} to film with id {}", mpaId, film.getId());
+        Optional<Mpa> mpaOpt = mpaStorage.getMpaById(mpaId);
+        if (mpaOpt.isEmpty()) {
+            throw new MpaNotFoundException("Попытка получить MPA с несуществующим id " + mpaId);
+        }
+
+        film.setMpa(mpaOpt.get());
+        log.info("mpa {} assigned to film with id {}", mpaOpt.get(), film.getId());
+    }
+
+    private void assignGenres(Film film) {
+        List<Genre> genres = film.getGenres();
+        if (genres == null || genres.isEmpty()) {
+            return;
+        }
+
+        log.info("attempt to assign Genres to film with id {}", film.getId());
+        Set<Genre> newGenres = new HashSet<>();
+        for (Genre genre : genres) {
+            int id = genre.getId();
+            Optional<Genre> genreOpt = genreStorage.getGenreById(id);
+            if (genreOpt.isEmpty()) {
+                throw new GenreNotFoundException("Попытка получить жанр с несуществующим id " + id);
+            }
+            newGenres.add(genreOpt.get());
+        }
+
+        // TODO assert genres.size() == newGenres.size() -> throw
+
+        // Postman - тесты хотят от меня упорядоченности(
+        film.setGenres(newGenres
+                .stream()
+                .sorted(Comparator.comparing(Genre::getId))
+                .collect(Collectors.toList()));
+        log.info("genres {} assigned to film with id {}", film.getGenres(), film.getId());
     }
 }

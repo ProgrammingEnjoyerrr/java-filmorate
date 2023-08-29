@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    @Qualifier("userDbStorage")
     private final UserStorage userStorage;
 
     @Override
@@ -55,8 +57,6 @@ public class UserServiceImpl implements UserService {
 
         log.info("adding friend with id {} for user with id {}.", userId, friendId);
         userStorage.addFriend(userId, friendId);
-        log.info("adding friend with id {} for user with id {}.", friendId, userId);
-        userStorage.addFriend(friendId, userId);
     }
 
     @Override
